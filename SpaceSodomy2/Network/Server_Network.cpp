@@ -1,11 +1,12 @@
 #include <pch.h>
 #include "Server_Network.h"
 
+namespace fs = std::experimental::filesystem;
+
 //basic constuctors
 Server_Network::Server_Network() {
 	socket.bind(8001);
 	socket.setBlocking(0);
-	status = boot_socket.connect(, 8001)
 }
 
 Server_Network::Server_Network(int port_) {
@@ -75,4 +76,47 @@ void Server_Network::send(std::string message) {
 	for (auto addr : addresses) {
 		socket.send(message.c_str(), message.size() + 1, addr, ports[addr]);
 	}
+}
+
+void Server_Network::boot_response() {
+	sf::TcpListener listener;
+	if (listener.listen(53000) != sf::Socket::Done) {
+		std::cout << "boot listener failed\n";
+	}
+
+	auto response = [](sf::TcpListener* listener_) {
+		sf::TcpSocket client;
+		if (listener_->accept(client) != sf::Socket::Done) {
+			std::cout << "boot client failed";
+		}
+		char data[100];
+		std::size_t received;
+
+		if (client.receive(data, 100, received) != sf::Socket::Done) {
+			std::cout << "client receive failed";
+		}
+		std::cout << "Received " << received << " bytes" << std::endl;
+
+		if (data == "replays") {
+			std::string answer = "";
+			for (auto file_path : fs::directory_iterator("replay/")) {
+				std::ifstream file(file_path.path().u8string());
+				std::string filename = file_path.path().filename().u8string();
+				answer += "FILE\nNAME " + filename;
+				std::string elem;
+				while (!getline(file, elem).eof()) {
+					answer += elem + "\n";
+				}
+				answer += "END\n";
+			}
+			answer += "END\n";
+			if (client.send(answer.c_str(), answer.length()) != sf::Socket::Done) {
+				std::cout << "sending failed";
+			}
+		}
+	};
+
+	std::thread thread(&listener);
+
+	thread.detach();
 }

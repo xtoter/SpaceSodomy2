@@ -13,13 +13,13 @@
 #include <string>
 #include <sys/timeb.h>
 #include <deque>
-
+#include <thread>
+#include <experimental/filesystem>
+#include <AuxLib/AuxLib.h>
 
 class Server_Network {
 private:
 	sf::UdpSocket socket; // socket
-	std::vector<sf::TcpSocket> boot_clients; // boot_socket
-	sf::TcpSocket::Status status;
 	char buffer[1024]; // receiving buffer
 	std::size_t received = 0; // receiving message size
 	sf::IpAddress sender; // player IP address
@@ -44,4 +44,5 @@ public:
 
 	void receive(); // push new message to the top of deque
 	void send(std::string message); // sending message to all players
+	void boot_response(); // response for boot request
 };
