@@ -18,6 +18,8 @@
 class Server_Network {
 private:
 	sf::UdpSocket socket; // socket
+	std::vector<sf::TcpSocket> boot_clients; // boot_socket
+	sf::TcpSocket::Status status;
 	char buffer[1024]; // receiving buffer
 	std::size_t received = 0; // receiving message size
 	sf::IpAddress sender; // player IP address

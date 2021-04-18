@@ -5,6 +5,7 @@
 Server_Network::Server_Network() {
 	socket.bind(8001);
 	socket.setBlocking(0);
+	status = boot_socket.connect(, 8001)
 }
 
 Server_Network::Server_Network(int port_) {
