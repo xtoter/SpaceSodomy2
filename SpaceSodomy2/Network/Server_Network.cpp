@@ -1,4 +1,4 @@
-#include <pch.h>
+#include "pch.h"
 #include "Server_Network.h"
 
 namespace fs = std::experimental::filesystem;
@@ -82,18 +82,21 @@ void Server_Network::boot_response() {
 	sf::TcpListener listener;
 	if (listener.listen(53000) != sf::Socket::Done) {
 		std::cout << "boot listener failed\n";
+		return;
 	}
 
 	auto response = [](sf::TcpListener* listener_) {
 		sf::TcpSocket client;
 		if (listener_->accept(client) != sf::Socket::Done) {
 			std::cout << "boot client failed";
+			return;
 		}
 		char data[100];
 		std::size_t received;
 
 		if (client.receive(data, 100, received) != sf::Socket::Done) {
 			std::cout << "client receive failed";
+			return;
 		}
 		std::cout << "Received " << received << " bytes" << std::endl;
 
@@ -112,11 +115,14 @@ void Server_Network::boot_response() {
 			answer += "END\n";
 			if (client.send(answer.c_str(), answer.length()) != sf::Socket::Done) {
 				std::cout << "sending failed";
+				return;
 			}
 		}
 	};
 
-	std::thread thread(&listener);
+	response(&listener);
 
-	thread.detach();
+	//std::thread thread(&listener);
+
+	//thread.detach();
 }
