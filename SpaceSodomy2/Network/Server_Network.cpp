@@ -80,7 +80,7 @@ void Server_Network::send(std::string message) {
 
 void Server_Network::boot_response() {
 	sf::TcpListener listener;
-	if (listener.listen(53000) != sf::Socket::Done) {
+	if (listener.listen(8002) != sf::Socket::Done) {
 		std::cout << "boot listener failed\n";
 		return;
 	}
@@ -88,29 +88,30 @@ void Server_Network::boot_response() {
 	auto response = [](sf::TcpListener* listener_) {
 		sf::TcpSocket client;
 		if (listener_->accept(client) != sf::Socket::Done) {
-			std::cout << "boot client failed";
+			std::cout << "boot client failed\n";
 			return;
 		}
 		char data[100];
 		std::size_t received;
 
 		if (client.receive(data, 100, received) != sf::Socket::Done) {
-			std::cout << "client receive failed";
+			std::cout << "client receive failed\n";
 			return;
 		}
 		std::cout << "Received " << received << " bytes" << std::endl;
 
-		if (data == "replays") {
+		
+		if (std::string(data) == "replays") {
 			std::string answer = "";
-			for (auto file_path : fs::directory_iterator("replay/")) {
+			for (auto file_path : fs::directory_iterator("replays")) {
 				std::ifstream file(file_path.path().u8string());
 				std::string filename = file_path.path().filename().u8string();
 				answer += "FILE\nNAME " + filename;
 				std::string elem;
-				while (!getline(file, elem).eof()) {
-					answer += elem + "\n";
-				}
-				answer += "END\n";
+				//while (!getline(file, elem).eof()) {
+				//	answer += elem + "\n";
+				//}
+				answer += "\nEND\n";
 			}
 			answer += "END\n";
 			if (client.send(answer.c_str(), answer.length()) != sf::Socket::Done) {
@@ -122,7 +123,7 @@ void Server_Network::boot_response() {
 
 	response(&listener);
 
-	//std::thread thread(&listener);
+	//std::thread thread(response, &listener);
 
 	//thread.detach();
 }

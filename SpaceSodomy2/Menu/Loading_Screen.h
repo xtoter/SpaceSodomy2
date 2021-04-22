@@ -1,7 +1,7 @@
 #pragma once
 #include <Draw/Draw.h>
-#include <Menu/Constant_Text.h>
-#include <Menu/Bar.h>
+#include "Constant_Text.h"
+#include "Bar.h""
 #include <string>
 class Loading_Screen {
 private:

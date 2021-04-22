@@ -5,11 +5,11 @@
 #include <AuxLib/AuxLib.h>
 #include <Draw/Draw.h>
 #include <Audio/Audio.h>
+#include <Menu/Loading_Screen.h>
 #include "HUD_Processing.h"
 #include "Menu_Processing.h"
 #include "Game_Client.h"
 #include "Replay.h"
-#include "Loading_Screen.h"
 #include <string>
 #include <fstream>
 #include <queue>

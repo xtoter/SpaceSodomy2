@@ -2,7 +2,7 @@
 #include <AuxLib/AuxLib.h>
 #include <Draw/Draw.h>
 #include <Audio/Audio.h>
-#include <Client/Loading_Screen.h>
+#include <Menu/Loading_Screen.h>
 #include <SFML/Network.hpp>
 class Control {
 private:
@@ -10,6 +10,7 @@ private:
 	Draw draw;
 	std::string ServerIP;
 	int port;
+	Loading_Screen* loading = nullptr;
 public:
 	Control(std::string ServerIP_, int port_);
 

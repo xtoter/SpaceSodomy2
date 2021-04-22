@@ -106,5 +106,6 @@ void Control::step() {
 		game.step(delay * 0.001);
 		// Send encoded info;
 		network.send(game.encode());
+		network.boot_response();
 	}
 }

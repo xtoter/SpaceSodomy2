@@ -160,6 +160,7 @@
     <ClInclude Include="Constant_Text.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Keyboard_Field.h" />
+    <ClInclude Include="Loading_Screen.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Menu_Object.h" />
     <ClInclude Include="pch.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Constant_Text.cpp" />
     <ClCompile Include="Keyboard_Field.cpp" />
+    <ClCompile Include="Loading_Screen.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Menu_Object.cpp" />
     <ClCompile Include="pch.cpp">
