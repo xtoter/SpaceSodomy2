@@ -27,6 +27,9 @@
     <ClInclude Include="Server_Network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TCP_packet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Network.cpp">
@@ -39,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Server_Network.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TCP_packet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

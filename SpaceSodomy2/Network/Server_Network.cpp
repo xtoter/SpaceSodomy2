@@ -79,15 +79,15 @@ void Server_Network::send(std::string message) {
 }
 
 void Server_Network::boot_response() {
-	sf::TcpListener listener;
-	if (listener.listen(8002) != sf::Socket::Done) {
-		std::cout << "boot listener failed\n";
-		return;
-	}
+	auto response = []() {
+		sf::TcpListener listener;
+		if (listener.listen(8002) != sf::Socket::Done) {
+			std::cout << "boot listener failed\n";
+			return;
+		}
 
-	auto response = [](sf::TcpListener* listener_) {
 		sf::TcpSocket client;
-		if (listener_->accept(client) != sf::Socket::Done) {
+		if (listener.accept(client) != sf::Socket::Done) {
 			std::cout << "boot client failed\n";
 			return;
 		}
@@ -111,6 +111,10 @@ void Server_Network::boot_response() {
 				//while (!getline(file, elem).eof()) {
 				//	answer += elem + "\n";
 				//}
+
+				for (int i = 0; i < 1000000; i++) {
+					answer += "a\n";
+				}
 				answer += "\nEND\n";
 			}
 			answer += "END\n";
@@ -120,10 +124,7 @@ void Server_Network::boot_response() {
 			}
 		}
 	};
+	std::thread thread(response);
 
-	response(&listener);
-
-	//std::thread thread(response, &listener);
-
-	//thread.detach();
+	thread.detach();
 }

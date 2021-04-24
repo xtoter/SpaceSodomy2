@@ -166,6 +166,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Server_Network.h" />
+    <ClInclude Include="TCP_packet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client_Network.cpp" />
@@ -177,6 +178,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Server_Network.cpp" />
+    <ClCompile Include="TCP_packet.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
