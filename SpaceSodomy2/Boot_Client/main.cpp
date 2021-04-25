@@ -5,7 +5,7 @@ using namespace std;
 
 int main() {
 	Control control("localhost", 8002);
-	while (1) {
-		control.get_replays();
-	}
+	control.get_files_list();
+	control.get_file("well.rep", "19.04.2021_21.40.rep");
+	Sleep(1000000);
 }

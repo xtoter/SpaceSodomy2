@@ -36,6 +36,8 @@ public:
 	static std::vector<int> string_to_mask(std::string, int digit = 16, char start = '0');
 	// Float to string with fixed digits
 	static std::string float_to_string(float val, int precision);
+	// Int to string with fixed digits
+	static std::string int_to_string(int val, int num);
 	// Calculates polygon signed area 
 	static float area(std::vector<b2Vec2>);
 	// Returns normalized vector by angle
@@ -110,7 +112,6 @@ public:
 
 	// Gets resolution of the screen
 	static std::pair<int, int> get_screen_resolution();
-
 
 	// Python-like format (replaces * with custom word?)
 	static std::string format(std::string base, std::string word);

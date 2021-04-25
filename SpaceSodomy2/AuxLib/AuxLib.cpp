@@ -227,6 +227,14 @@ std::string aux::float_to_string(float val, int precision) {
 	return stream.str();
 }
 
+std::string aux::int_to_string(int val, int num) {
+	std::string ans = std::to_string(val);
+	for (int i = ans.size(); i < num; i++) {
+		ans = "0" + ans;
+	}
+	return ans;
+}
+
 float aux::area(std::vector<b2Vec2> vertices) {
 	float val = 0;
 	for (int i = 0; i < vertices.size(); i++) {

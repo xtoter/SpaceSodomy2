@@ -100,27 +100,50 @@ void Server_Network::boot_response() {
 		}
 		std::cout << "Received " << received << " bytes" << std::endl;
 
-		
-		if (std::string(data) == "replays") {
+		std::map<std::string, std::string> files;
+
+		for (auto file_path : fs::directory_iterator("replays")) {
+			files[file_path.path().filename().u8string()] = file_path.path().u8string();
+		}
+
+		std::string request(data);
+
+		std::stringstream request_stream;
+
+		request_stream << request;
+		request_stream >> request;
+
+		if (request == "FileList") {
 			std::string answer = "";
 			for (auto file_path : fs::directory_iterator("replays")) {
-				std::ifstream file(file_path.path().u8string());
 				std::string filename = file_path.path().filename().u8string();
-				answer += "FILE\nNAME " + filename;
-				std::string elem;
-				//while (!getline(file, elem).eof()) {
-				//	answer += elem + "\n";
-				//}
-
-				for (int i = 0; i < 1000000; i++) {
-					answer += "a\n";
-				}
-				answer += "\nEND\n";
+				answer += "FILE " + filename + " # " + std::to_string(TCP_packet::file_size(file_path.path().u8string())) +
+					" packets\n";
 			}
 			answer += "END\n";
 			if (client.send(answer.c_str(), answer.length()) != sf::Socket::Done) {
 				std::cout << "sending failed";
 				return;
+			}
+		}
+
+		if (request == "Get") {
+			std::string name;
+
+			int beg, end;
+
+			request_stream >> name >> beg >> end;
+
+			if (files[name] == "")
+				return;
+			TCP_packet packet;
+			packet.make_packets(files[name]);
+
+			for (int i = beg; i < end; i++) {
+				if (client.send(*packet.get_packet(i)) != sf::Socket::Done) {
+					std::cout << "sending failed";
+					return;
+				}
 			}
 		}
 	};

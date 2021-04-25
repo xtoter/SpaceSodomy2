@@ -17,6 +17,7 @@
 #include <thread>
 #include <experimental/filesystem>
 #include <AuxLib/AuxLib.h>
+#include "TCP_packet.h"
 
 class Server_Network {
 private:
