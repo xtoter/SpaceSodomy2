@@ -10,16 +10,16 @@ int TCP_packet::file_size(std::string path) {
 }
 
 void TCP_packet::make_packets(std::string path) {
-	std::ifstream file(path);
+	std::ifstream file(path, std::fstream::binary);
 	packets.clear();
 	size = file_size(path) + 1;
 	packets.resize(size);
 	std::string cur;
-	cur.resize(packet_size);
+	file.seekg(0, std::ios::beg);
 	for (int i = 0; i < size; i++) {
-		for (int j = 0; (j < packet_size && !file.eof()); j++) {
-			cur[j] = file.get();
-		}
+		char buff[1000];
+		file.read(buff, 1000);
+		cur = buff;
 		packets[i] << i << cur;
 	}
 }
@@ -29,13 +29,16 @@ void TCP_packet::make_file(std::string path_) {
 	fs::create_directories(path.parent_path());
 
 	std::ofstream fout;
-	fout.open(path);
+	fout.open(path, std::fstream::binary);
 	
+	fout.seekp(0, std::ios::beg);
 	for (int i = 0; i < size; i++) {
 		int num;
-		std::string data;
-		packets[i] >> num >> data;
-		fout << data;
+		std::string cur;
+		packets[i] >> num >> cur;
+		for (int j = 0; j < cur.size(); j++) {
+			fout.put(cur[j]);
+		}
 	}
 	fout.close();
 }
@@ -46,7 +49,7 @@ void TCP_packet::set_size(int size_) {
 }
 void TCP_packet::set_packet(sf::Packet packet_) {
 	int num;
-	std::string data;
+	std::wstring data;
 	packet_ >> num >> data;
 	packet_ << num << data;
 	packets[num] = packet_;

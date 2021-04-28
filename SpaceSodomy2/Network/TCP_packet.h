@@ -6,6 +6,8 @@
 #include <experimental/filesystem>
 #include <stdio.h>
 #include <SFML/Network.hpp>
+#include <fcntl.h>
+#include <io.h> 
 class TCP_packet {
 private:
 	int size = 0;

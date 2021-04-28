@@ -136,6 +136,11 @@ void Server_Network::boot_response() {
 
 			if (files[name] == "")
 				return;
+
+			//fs::path p = files[name];
+
+			//p.replace_extension(".txt");
+
 			TCP_packet packet;
 			packet.make_packets(files[name]);
 
