@@ -49,8 +49,8 @@ void Server_Network::del_address(std::string address_) {
 
 void Server_Network::receive() {
 	// Receiving
-	socket.receive(buffer, sizeof(buffer), received, sender, port);
-	if (received)
+	socket.receive(received, sender, port);
+	if (received.getDataSize())
 	{
 		// Applying sender info
 		addresses.insert(sender);
@@ -58,9 +58,10 @@ void Server_Network::receive() {
 		IPconvert[sender.toString()] = sender;
 
 		// Applying received info
-		std::string message_ = sender.toString() + " " + std::string(buffer); // adding IP address to message
+		std::string message_;
+		received >> message_;
+		message_ = sender.toString() + " " + message_; // adding IP address to message
 		messages.push_back(message_);
-		received = 0;
 	}
 }
 
@@ -70,8 +71,10 @@ void Server_Network::send(std::string message) {
 			fout.open(replay_path);
 		fout << message << "\n";
 	}
+	sf::Packet to_send;
+	to_send << message;
 	//send message for all users
 	for (auto addr : addresses) {
-		socket.send(message.c_str(), message.size() + 1, addr, ports[addr]);
+		socket.send(to_send, addr, ports[addr]);
 	}
 }

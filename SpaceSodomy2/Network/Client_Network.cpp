@@ -4,7 +4,7 @@
 
 //basic constructors
 Client_Network::Client_Network() {
-	socket.setBlocking(0);
+	socket.setBlocking(1);
 }
 
 Client_Network::Client_Network(std::string serverIP_, int port_, int id_, std::string name_, int token_) {
@@ -12,8 +12,8 @@ Client_Network::Client_Network(std::string serverIP_, int port_, int id_, std::s
 	serverIP = serverIP_;
 	id = id_;
 	name = name_;
-	socket.setBlocking(0);
-	socket_receiving.setBlocking(0);
+	socket.setBlocking(1);
+	socket_receiving.setBlocking(1);
 	token = token_;
 }
 
@@ -67,7 +67,9 @@ void Client_Network::send(std::string data) {
 	// Sending
 	auto func = [](sf::UdpSocket* socket, std::string data,
 		std::string serverIP, int port) {
-		socket->send(data.c_str(), data.size() + 1, serverIP, port);
+		sf::Packet to_send;
+		to_send << data;
+		socket->send(to_send, serverIP, port);
 	};
 
 	std::thread thread(func, &socket, data, serverIP, port);
@@ -76,15 +78,23 @@ void Client_Network::send(std::string data) {
 
 void Client_Network::receive() {
 	//Cycle used to keep network stack empty
-	for (int i = 0; i < 10; i++) {
-		std::size_t received = 0;
-		sf::IpAddress sender;
-		unsigned short port_ = 0;
+	for (int i = 0; i < 2; i++) {
 		// buffer saves only last message
-		socket.receive(buffer, sizeof(buffer), received, sender, port_);
+		auto func = [](sf::UdpSocket* socket, std::string* data, int* x) {
+			*x += 1;
+			sf::Packet packet;
+			sf::IpAddress sender;
+			unsigned short port_ = 0;
+			socket->receive(packet, sender, port_);
+			packet >> *data;
+			*x -= 1;
+		};
+		std::thread thread(func, &socket, &received_data, &x);
+		thread.detach();
 	}	
+	std::cout << x << "\n";
 }
 
 std::string Client_Network::get_message() {
-	return std::string(buffer);
+	return received_data;
 }

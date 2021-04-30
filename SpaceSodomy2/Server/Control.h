@@ -16,7 +16,7 @@ private:
 	// Init game & network
 	Game game;
 	Server_Network network;
-	int delay = 20; // delay between game updates
+	int delay = 10; // delay between game updates
 	int disconnect_timeout = 1000; // time for reconnection
 	int last_step_time = aux::get_milli_count(); // last step time
 	std::set <std::string> addresses; // IP addresses of active players

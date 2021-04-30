@@ -14,7 +14,9 @@
 
 class Client_Network {
 private:
-	char buffer[1024]; // receiving buffer
+	sf::Packet received; // receiving buffer
+	std::string received_data;
+	bool is_reading = 0;
 	std::string serverIP = "localhost"; // Server IP address
 	int port = 8001; // sending port
 	sf::UdpSocket socket;
@@ -22,6 +24,7 @@ private:
 	int id = 1; // player id
 	std::string name = "UnknownPlayer";
 	int token = 0;
+	int x = 0;
 
 public:
 	Client_Network();
