@@ -1,12 +1,13 @@
 // Draw.cpp : Defines the functions for the static library.
 //
-
 #include "pch.h"
 #include "framework.h"
 #include "Draw.h"
 #include <iostream>
 
 // PRIVATE //
+
+sf::Text shit;
 
 void Draw::load_texture(std::string name, std::string path_to_texture) {
 	sf::Texture* tex = new sf::Texture();
@@ -16,6 +17,32 @@ void Draw::load_texture(std::string name, std::string path_to_texture) {
 		delete tex;
 		return;
 	}
+	textures.insert(std::make_pair(name, tex));
+}
+void Draw::create_text_texture(std::string name, std::string val, sf::Color color, std::string font_name,
+	int character_size, b2Vec2 text_scale, b2Vec2 canvas_scale) {
+	sf::Text text;
+	text.setFont(*fonts["font"]);
+	text.setString(val);
+	text.setFillColor(sf::Color::White);
+	text.setCharacterSize(60);
+	text.setScale(10, 10);
+	text.setOrigin(floor(text.getLocalBounds().width / 2), floor(text.getLocalBounds().height));
+	text.setPosition(aux::to_Vector2f({100, 100}));
+	/*text.setString(val);
+	text.setFillColor(sf::Color::Black);
+	text.setFont(*fonts[font_name]);
+	text.setCharacterSize(character_size);
+	text.setOrigin(floor(text.getLocalBounds().width / 2), floor(text.getLocalBounds().height));
+	text.setPosition(0, 0);
+	text.setScale(aux::to_Vector2f(text_scale));*/
+	shit = text;
+	sf::RenderTexture canvas;
+	canvas.create(300, 27);
+	canvas.clear(sf::Color::White);//(0, 0, 0, 0));
+	canvas.draw(text);
+	canvas.display();
+	sf::Texture* tex = new sf::Texture(canvas.getTexture());
 	textures.insert(std::make_pair(name, tex));
 }
 void Draw::load_font(std::string name, std::string path_to_font) {
@@ -84,7 +111,19 @@ void Draw::load_textures(std::string path) {
 	auto file = (aux::comment(input_file));
 	while (file) {
 		std::string name, path;
-		file >> name >> path;
+		file >> name;
+		if (name == "-g") {
+			std::string val, font_name;
+			sf::Color color;
+			int character_size, colorr, colorg, colorb, colora;
+			b2Vec2 text_scale, canvas_scale;
+			file >> name >> val >> colorr >> colorg >> colorb >> colora >> font_name
+				>> character_size >> text_scale.x >> text_scale.y >> canvas_scale.x >> canvas_scale.y;
+			color = sf::Color(colorr, colorg, colorb, colora);
+			create_text_texture(name, val, color, font_name, character_size, text_scale, canvas_scale);
+			continue;
+		}
+		file >> path;
 		std::cout << "loaded: " << name << " " << path << "\n";
 		load_texture(name, path);
 	}

@@ -26,6 +26,8 @@ public:
 	// Load single texture
 	void insert_texture(sf::Texture* tex, std::string name);
 	void load_texture(std::string name, std::string path_to_texture);
+	void create_text_texture(std::string name, std::string val, sf::Color color, std::string font_name,
+		int character_size, b2Vec2 text_scale, b2Vec2 canvas_scale);
 	void load_font(std::string name, std::string path_to_font);
 	void export_texture(std::string name, std::string path_to_texture);
 
