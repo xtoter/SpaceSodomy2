@@ -8,10 +8,31 @@ Replay::Replay(std::string path) {
 
 void Replay::set_replay_path(std::string path) {
 	frames.clear();
-	std::ifstream file(path);
-	std::string k;
-	while (!getline(file, k).eof()) {
-		frames.push_back(k);
+	std::ofstream fail(path, std::ios::app);
+	fail << '\0';
+	fail.close();
+	std::ifstream file(path, std::ios::binary);
+	auto get_msg = [](std::ifstream& file) {
+		std::string val;
+		val += "Mmaps/rocks.lvl";
+		unsigned char a;
+		while ((a = file.get(), val.push_back(a)), a != '\0') {
+			if (val.size() > 2000) {
+				return std::string("");
+			}
+			if (val.size() >= 16) {
+				if (val.substr(val.size() - 16) == "\nMmaps/rocks.lvl") {
+					for (int i = 0; i <= 15; i++) {
+						val.pop_back();
+					}
+					return val;
+				}
+			}
+		}
+		return val;
+	};
+	while (!file.eof()) {
+		frames.push_back(get_msg(file));
 	}
 	replay_frame.set_max(frames.size() - 2);
 }
