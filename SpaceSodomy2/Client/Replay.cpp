@@ -8,15 +8,22 @@ Replay::Replay(std::string path) {
 
 void Replay::set_replay_path(std::string path) {
 	frames.clear();
-	std::ofstream fail(path, std::ios::app);
+	std::ofstream fail(path, std::ios::app | std::ios::binary);
 	fail << '\0';
 	fail.close();
 	std::ifstream file(path, std::ios::binary);
 	auto get_msg = [](std::ifstream& file) {
+		auto get = [&file]() {
+			unsigned char ch = file.get();
+			if (ch == '\r' && file.peek() == '\n') {
+				ch = file.get();
+			}
+			return ch;
+		};
 		std::string val;
 		val += "Mmaps/rocks.lvl";
 		unsigned char a;
-		while ((a = file.get(), val.push_back(a)), a != '\0') {
+		while ((a = get(), val.push_back(a)), a != '\0') {
 			if (val.size() > 2000) {
 				return std::string("");
 			}
